@@ -1,0 +1,312 @@
+openapi: 3.0.3
+info:
+  title: Swagger Jupido API - V1
+  description: |-
+    Hi, here you will see the endpoint documentation of Jupido app.
+  version: 1.0.0
+servers:
+  - url: https://api.jupido.jupitr.fr/
+tags:
+  - name: Login
+    description: Login endoint
+  - name: Register
+    description: Register endpoint
+  - name: user
+    description: Operations about user
+  - name: Items
+    description: All items endpoint
+paths:
+  /login/:
+    post:
+      tags: 
+        - Login
+      summary: Login a user
+      description: Use to login a user
+      requestBody:
+        description: Bonjour
+        content: 
+          application/json:
+            schema:
+              type: object
+              example:
+                username: Tim
+                password: 123456789
+        required: True
+      parameters:
+        - name: username
+          in: query
+          description: Username of the user
+          required: true
+          schema:
+            type: string
+        
+      responses:
+        '200':
+          description: Successfull login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          description: Something went wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: "Something went wrong"
+                  detail: "Password and username does not match"
+  /register/:
+    post:
+      tags:
+        - Register
+      summary: Create a user
+      description: Use this endpoint to register a new user
+      requestBody:
+        description: Create a user
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: Tim
+                password: 123456789
+                password2: 123456789
+                email: tim@gmail.com
+      responses:
+        '200':
+          description: Successfull login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          description: Something went wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: "Something went wrong"
+                  detail: "Passwords does not match"
+  /items/:
+    get:
+      tags:
+        - Items
+      summary: Retreive all your items
+      description: Retreive all your items
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TodoItem'
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+      security:
+        - bearerAuth: []
+        
+  /items/{item_id}:
+    get:      
+      tags:
+        - Items
+      summary: Retreive item by id
+      description: Retreive item by id
+      parameters:
+        - name: item_id
+          in: path
+          description: ID of item to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoItem'
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          $ref: "#/components/responses/NotFound"
+          
+      security:
+        - bearerAuth: []
+        
+    put:
+      tags:
+        - Items
+      summary: Modify an item
+      description: Modify an item
+      parameters:
+        - name: item_id
+          in: path
+          description: ID of item to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoItem'
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          $ref: "#/components/responses/NotFound"
+      security:
+        - bearerAuth: []
+        
+    delete:
+      tags:
+        - Items
+      summary: Delete an item
+      description: Delete an item
+      parameters:
+        - name: item_id
+          in: path
+          description: ID of item to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: This item has been deleted
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          $ref: "#/components/responses/NotFound"
+      security:
+        - bearerAuth: []
+        
+  /items/{item_id}/status/:
+    post:
+      tags:
+        - Items
+      summary: Modify item as done or not
+      description: Modify item as done or not
+      requestBody:
+        description: Create a user
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                done: True
+      parameters:
+        - name: item_id
+          in: path
+          description: ID of item to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoItem'
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          $ref: "#/components/responses/NotFound"
+      security:
+        - bearerAuth: []
+      
+
+  /user/:
+    get:
+      tags:
+        - user
+      summary: Get user information
+      description: This can only be done by the logged in user.
+      operationId: getUser
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+      security:
+        - bearerAuth: []
+        
+  /logout:
+    get:
+      tags:
+        - user
+      summary: Logs out current logged in user session
+      description: ''
+      operationId: logoutUser
+      parameters: []
+      responses:
+        '200':
+          description: successful operation
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+      security:
+        - bearerAuth: []
+components:
+  schemas:
+    TodoItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: "Example title"
+        description:
+          type: string
+          format: text
+          example: "Example description"
+        done:
+          type: boolean
+          example: True
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        username:
+          type: string
+          example: theUser
+        email:
+          type: string
+          example: john@email.com
+      xml:
+        name: user
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+    NotFound:
+      description: This ressource does not exist
