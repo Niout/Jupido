@@ -112,7 +112,7 @@ function Home() {
       </div>
       <AddModal setTodoList={setTodoList} />
       <footer className="fixed left-0 right-0 gap-5 flex flex-row items-center justify-center bottom-3 text-center text-gray-500 text-sm">
-        <Link to="/doc">Docs</Link>
+        <Link to="https://boriz.gitbook.io/jupido">Docs</Link>
         <button onClick={handleLogout}>Logout</button>
       </footer>
     </>

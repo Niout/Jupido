@@ -107,7 +107,7 @@ function Register() {
         Already have an account? <p className="underline">Login here!</p>
       </Link>
       <footer className="fixed left-0 right-0 gap-5 flex flex-row items-center justify-center bottom-3 text-center text-gray-500 text-sm">
-        <Link to="/doc">Docs</Link>
+        <Link to="https://boriz.gitbook.io/jupido">Docs</Link>
       </footer>
     </div>
   );

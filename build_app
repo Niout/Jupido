@@ -135,5 +135,3 @@ gunicorn -c config/gunicorn/prod.py
 echo -e "${green}[SUCCESS] BACKEND COMPLETLY BUILT${nc}"
 
 echo -e "${green}[SUCCESS] APP COMPLETLY BUILT${nc}"
-
-exit 0
